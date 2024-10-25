@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.eugene.aiwebtester.ai.model.Question;
+import com.eugene.aiwebtester.ai.model.QuestionResp;
 
 import org.springframework.ai.autoconfigure.retry.SpringAiRetryAutoConfiguration;
 import org.springframework.ai.openai.api.OpenAiApi;
@@ -33,7 +33,7 @@ public class AIChatService {
     private final static String DEFAULT_NAME = "Normal";
     private final ChatClient chatClient;
     private Map<String, String> responseTracker = new HashMap<String, String>();
-    private Map<Integer, Question> responseQuestionTracker = new HashMap<Integer, Question>();
+    private Map<Integer, QuestionResp> responseQuestionTracker = new HashMap<Integer, QuestionResp>();
     private String voice = DEFAULT_NAME;
     private ChatMemory chatMemory;
 
@@ -80,7 +80,8 @@ public class AIChatService {
         return resp;
     }
 
-    public Map<Integer, Question> generateAndTrack(String message, String conversationId, int chatHistoryWindowSize) {
+    public Map<Integer, QuestionResp> generateAndTrack(String message, String conversationId,
+            int chatHistoryWindowSize) {
         String resp = chatClient.prompt()
                 .system("You are a friendly chat bot that answers question in the voice of " + voice)
                 .advisors(new MessageChatMemoryAdvisor(chatMemory, conversationId, chatHistoryWindowSize))
@@ -88,11 +89,11 @@ public class AIChatService {
                 .call()
                 .content();
 
-        Question q = new Question();
+        QuestionResp q = new QuestionResp();
 
         q.setQuestion(message);
         q.setAnswer(resp);
-        q.setId(responseQuestionTracker.size());
+        q.setId(responseQuestionTracker.size() + "");
         responseQuestionTracker.put(responseQuestionTracker.size(), q);
         LOG.info("- Size after is: " + responseQuestionTracker.size());
 

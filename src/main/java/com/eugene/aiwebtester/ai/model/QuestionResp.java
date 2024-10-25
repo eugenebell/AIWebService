@@ -1,16 +1,16 @@
 package com.eugene.aiwebtester.ai.model;
 
-public class Question {
+public class QuestionResp {
 
-    private long id;
+    private String id;
     private String question;
     private String answer;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

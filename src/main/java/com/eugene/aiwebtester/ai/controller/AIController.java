@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eugene.aiwebtester.ai.model.Question;
+import com.eugene.aiwebtester.ai.model.AIQuestion;
+import com.eugene.aiwebtester.ai.model.QuestionResp;
 import com.eugene.aiwebtester.ai.service.AIChatService;
 import org.springframework.ui.Model;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -33,26 +33,31 @@ public class AIController {
     @GetMapping("/question")
     public String questionForm(Model model) {
         LOG.info("Setting form");
-        model.addAttribute("question", new Question());
+        model.addAttribute("aiquestion", new AIQuestion());
         return "question";
     }
 
     @PostMapping("/question")
-    public String question(@ModelAttribute Question question, Model model) {
-        LOG.info("Question asked is :" + question.getQuestion());
-        String resp = aiChatService.generate(question.getQuestion(), conversationId, 10);
-        question.setAnswer(resp);
-        model.addAttribute("question", question);
+    public String question(@ModelAttribute AIQuestion aiquestion, Model model) {
+        LOG.info("Question asked is :" + aiquestion.getQuestion());
+        String resp = aiChatService.generate(aiquestion.getQuestion(), conversationId, 10);
+        QuestionResp qr = new QuestionResp();
+        qr.setQuestion(aiquestion.getQuestion());
+        qr.setId(aiquestion.getId());
+        qr.setAnswer(resp);
+        model.addAttribute("aiquestion", aiquestion);
         // model.addAttribute("resp", resp);
         LOG.info("Response is " + resp);
         return "question";
     }
 
     @PostMapping("/questions")
-    public String questions(@ModelAttribute Question question, Model model) {
-        LOG.info("Question asked is :" + question.getQuestion());
-        Map<Integer, Question> questions = aiChatService.generateAndTrack(question.getQuestion(), conversationId, 10);
+    public String questions(@ModelAttribute AIQuestion aiquestion, Model model) {
+        LOG.info("Question asked is :" + aiquestion.getQuestion());
+        Map<Integer, QuestionResp> questions = aiChatService.generateAndTrack(aiquestion.getQuestion(), conversationId,
+                10);
         // question.setAnswer(resp);
+        model.addAttribute("aiquestion", aiquestion);
         model.addAttribute("questions", questions);
         model.addAttribute("listOfKeys", questions.keySet());
         // model.addAttribute("resp", resp);
