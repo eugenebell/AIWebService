@@ -1,0 +1,11 @@
+applications:
+- name: ai-chat
+  path: ./target/AIWebService-0.0.1-SNAPSHOT.jar
+  memory: 1G
+  env:
+    INPUT_MODEL: llama3.1
+    JBP_CONFIG_OPEN_JDK_JRE: '[jre: {version: 21.+}]'
+  services:
+    - ollama-si1
+#Create a GenAI for TAS Service for this app to function
+#Create service(s) ahead of time with either the cf cli or Apps Manager
