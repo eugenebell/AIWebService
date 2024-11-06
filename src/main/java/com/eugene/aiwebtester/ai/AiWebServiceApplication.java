@@ -7,8 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class AiWebServiceApplication {
-	// private static final Logger LOG =
-	// LogManager.getLogger(AiWebServiceApplication.class);
+	private static final Logger LOG = LogManager.getLogger(AiWebServiceApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(AiWebServiceApplication.class, args);
